@@ -1,4 +1,4 @@
-name: 自动化构建流水线
+name: CI/CD
 
 on:
   push:
@@ -8,19 +8,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [22.x]
-
     steps:
       - uses: actions/checkout@v4
-      
-      - uses: actions/setup-node@v4
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          node-version: ${{matrix.node-version}}
-
-      - run: |
-          npm install
-          npm run build
-
-      - run: ls ${{github.workspace}}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            whoami
+            ls -al ~
