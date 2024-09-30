@@ -1,5 +1,4 @@
-name: Github Action Demo
-run-name: 这是一个运行时workflow名称
+name: 自动化构建流水线
 
 on:
   push:
@@ -11,13 +10,11 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [22.x]
 
     steps:
       - uses: actions/checkout@v4
-
-      - run: echo "github actor是 ${{github.actor}}, 运行os是${{runner.os}}, 触发事件是${{github.event_name}}, 分支是${{github.ref}}, git库名是${{github.repository}}, workflow状态是${{job.status}}"
-
+      
       - uses: actions/setup-node@v4
         with:
           node-version: ${{matrix.node-version}}
@@ -27,30 +24,3 @@ jobs:
           npm run build
 
       - run: ls ${{github.workspace}}
-
-# on:
-#   push:
-#     branches: [ "main" ]
-#   pull_request:
-#     branches: [ "main" ]
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     strategy:
-#       matrix:
-#         node-version: [18.x, 20.x, 22.x]
-
-#     steps:
-#     - uses: actions/checkout@v4
-
-#     - name: Use Node.js ${{ matrix.node-version }}
-#       uses: actions/setup-node@v4
-#       with:
-#         node-version: ${{ matrix.node-version }}
-
-#     - name: Build
-#       run: |
-#         npm install
-#         npx webpack
