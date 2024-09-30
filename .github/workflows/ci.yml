@@ -7,18 +7,26 @@ on:
 
 jobs:
   build:
-    name: 签出代码并构建
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
     steps:
-      - name: 签出
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: 展示当前上下文相关信息
-        run: echo "github actor是 ${{github.actor}}, 运行os是${{runner.os}}, 触发事件是${{github.event_name}}, 分支是${{github.ref}}, git库名是${{github.repository}}, workflow状态是${{job.status}}"
+      - run: echo "github actor是 ${{github.actor}}, 运行os是${{runner.os}}, 触发事件是${{github.event_name}}, 分支是${{github.ref}}, git库名是${{github.repository}}, workflow状态是${{job.status}}"
 
-      - name: 列出所有文件
-        run: ls ${{github.workspace}}
-    
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{matrix.node-version}}
+
+      - run: |
+          npm install
+          npm run build
+
+      - run: ls ${{github.workspace}}
 
 # on:
 #   push:
